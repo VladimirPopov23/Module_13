@@ -1,25 +1,21 @@
-# module_13_1.py
-# 04.01.2025 Задача "Асинхронные силачи"
+# module_13_2.py
+# 11.01.2025 Домашнее задание по теме "Хендлеры обработки сообщений".
 
+from aiogram import Bot, Dispatcher, executor, types
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import asyncio
 
+api = 'тут должен был быть ключ, но мне его не рекомендовали распространять(('
+bot = Bot(token = api)
+dp = Dispatcher(bot, storage = MemoryStorage())
 
-async def start_strongman(name, power):  # name - имя силача, power - его подъёмная мощность
-    print(f'Силач {name} начал соревнования.')
-    for i in range(1, 6):
-        ball_number =+ i
-        await asyncio.sleep(1 / power)  # задержка обратно пропорциональная силе power силача
-        print(f'Силач {name} поднял {ball_number} шар')
-    print(f'Силач {name} закончил соревнования.')
+@dp.message_handler(commands = ['start'])
+async def start(message):
+    print('Привет! Я бот помогающий твоему здоровью.')
 
+@dp.message_handler()
+async def all_message(message):
+    print('Введите команду /start, чтобы начать общение.')
 
-async def start_tournament():
-    task1 = asyncio.create_task(start_strongman('Pasha', 3))
-    task2 = asyncio.create_task(start_strongman('Denis', 4))
-    task3 = asyncio.create_task(start_strongman('Apollon', 5))
-    await task1
-    await task2
-    await task3
-
-
-asyncio.run(start_tournament())
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True)
